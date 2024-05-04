@@ -1,64 +1,69 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ffi';
+
 void main() {
-  Meal meal = Meal('beans', 'protin', 'Milk').withSuger('Loctoz');
-
-  print(meal.suger);
-  // Cat cat = Cat(name: "Ketty");
-  // Cat cat2 = Cat(name: "Ketty");
-
   Cat cat = Cat.getInstance();
-  Cat cat2 = Cat.getInstance();
+  Cat cat1 = Cat.getInstance();
 
-  if (cat2 == cat) {
+  if (cat == cat1) {
     print("Matched");
   } else {
     print("Not Matched");
   }
+
+  Home home = HomeBuilder().build();
+
+  print(home.home.allView);
 }
+
+
+
+// ?  SingleTone Pattern
+// ?  reduce resources
 
 class Cat {
   String name;
-  Cat({
+  Cat._({
     required this.name,
   });
 
-  static Cat cat = Cat(name: "Singleton Cat");
+  static Cat cat = Cat._(name: "Single Cat");
 
   static getInstance() {
     return cat;
   }
-
-  // ! denfination for ==
-
-  // @override
-  // bool operator ==(covariant Cat other) {
-  //   if (identical(this, other)) return true;
-
-  //   return
-  //     other.name == name;
-  // }
-
 }
 
-// ? builder pattern
 
-class Meal {
-  String? beans;
-  String? protin;
-  String? suger;
-  Meal(
-    this.beans,
-    this.protin,
-    this.suger,
-  );
+// ?  Builder Pattern 
+// ?  Customize Code
 
-  withbeans(String typeOfBeans) {
-    this.beans = typeOfBeans;
+class Home {
+  HomeBuilder home;
+  Home({required this.home});
+}
+
+class HomeBuilder {
+  int? roomCount;
+  String? location;
+  bool? allView;
+
+  HomeBuilder withRoom(int count) {
+    this.roomCount = count;
     return this;
   }
 
-  withSuger(String typeOfSuger) {
-    this.suger = typeOfSuger;
+  HomeBuilder withLocation(String location) {
+    this.location = location;
     return this;
+  }
+
+  HomeBuilder withallView(bool allViewd) {
+    this.allView = allViewd;
+    return this;
+  }
+
+  Home build() {
+    return Home(home: this);
   }
 }

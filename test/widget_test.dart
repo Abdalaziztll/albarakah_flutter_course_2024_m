@@ -11,20 +11,72 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:clean_service_layter/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group("Testing int Varaibles", () {
+    int counter = 0;
+    test("The Happy Seniore of Store int in varabile", () {
+      expect(counter, 0);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test("The Increament of Counter", () {
+      counter++;
+      expect(counter, 1);
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group("Test for Http convert URL from Map", () {
+    Map<String, String> map = {"name": "Ahmad", "score": "40"};
+    String baseurl = "https://www.google.com/api/v1/{name}/hello/{score}";
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    String replacefromMapIntoUrl(
+        {required String url, required Map<String, String> map}) {
+      if (map.length == 2) {
+        url = url.replaceAll(
+            "{" + map.keys.elementAt(0) + "}", map.values.elementAt(0));
+
+        url = url.replaceAll(
+            "{" + map.keys.elementAt(1) + "}", map.values.elementAt(1));
+
+        return url;
+      } else {
+        return url;
+      }
+    }
+
+    test("The Happy Scenrio of Map  and HTTP URl", () {
+      expect(replacefromMapIntoUrl(map: map, url: baseurl),
+          "https://www.google.com/api/v1/Ahmad/hello/40");
+    });
+
+    test("The Empty Map Scenroi", () {
+      expect(replacefromMapIntoUrl(url: baseurl, map: {}),
+          "https://www.google.com/api/v1/{name}/hello/{score}");
+    });
+
+    test("The One Parameter Map", () {
+      expect(replacefromMapIntoUrl(url: baseurl, map: {"name": "Noor"}),
+          "https://www.google.com/api/v1/{name}/hello/{score}");
+    });
+
+    test("The Three Map Length", () {
+      expect(
+          {
+            "name": "Noor",
+            "name": "Ahmad",
+            "score": "40",
+            "score": "30",
+          }.length,
+          2);
+
+      expect(
+          replacefromMapIntoUrl(
+            url: baseurl,
+            map: {
+              "name": "Noor",
+              "name": "Ahmad",
+              "score": "30",
+            },
+          ),
+          "https://www.google.com/api/v1/Ahmad/hello/30");
+    });
   });
 }
